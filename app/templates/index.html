@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect to Tailscale</title>
+</head>
+
+<body>
+    <h1>Connect Device to Tailscale Network</h1>
+
+    <label for="authkey">Enter Tailscale Pre-Auth Key:</label><br><br>
+    <input type="text" id="authkey" name="authkey" placeholder="Enter your pre-auth key"><br><br>
+
+    <button id="connectButton">Connect to Tailscale</button>
+    <p id="responseMessage"></p>
+
+    <script>
+        document.getElementById("connectButton").addEventListener("click", function () {
+            const authKey = document.getElementById("authkey").value;
+
+            if (!authKey) {
+                document.getElementById("responseMessage").innerText = "Please provide a pre-auth key.";
+                return;
+            }
+
+            // Send the auth key to the Flask backend
+            fetch("http://localhost:5500/connect-tailscale", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ authkey: authKey })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        document.getElementById("responseMessage").innerText = data.message;
+                    } else if (data.error) {
+                        document.getElementById("responseMessage").innerText = "Error: " + data.error;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("responseMessage").innerText = "Request failed: " + error.message;
+                });
+        });
+    </script>
+</body>
+
+</html>
