@@ -7,4 +7,7 @@ for this you need to follow the below steps.
 3. pip3 install flask_cors.
 
 ---
+'''pip3 install flask_cors
+
+---
 
