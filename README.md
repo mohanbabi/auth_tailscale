@@ -4,10 +4,11 @@ This app is build using flask to join your's tailscale network.
 for this you need to follow the below steps.
 1. in your system you need to install python3.
    
-    pip3 install flask.  
-    pip3 install flask_cors.
-     
+    pip3 install flask
+    pip3 install flask_cors
 
+
+    pip3 install test
 ---
     pip3 install flask_cors
 
