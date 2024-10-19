@@ -4,6 +4,11 @@ import re
 
 app = Flask(__name__)
 
+
+@app.route('/')
+def index():
+    return render_template('index.html')  # Render the HTML UI
+
 @app.route('/start-tailscale', methods=['POST'])
 def start_tailscale():
     try:
