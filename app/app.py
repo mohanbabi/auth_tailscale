@@ -1,39 +1,36 @@
-import pexpect
-from flask import Flask, jsonify
-import re
+from flask import Flask, request, jsonify,render_template
+import subprocess
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 
+
+# Route to render the index.html file
 @app.route('/')
 def index():
-    return render_template('index.html')  # Render the HTML UI
+    return render_template('index.html')  # Render the HTML page
 
-@app.route('/start-tailscale', methods=['POST'])
-def start_tailscale():
+
+@app.route('/connect-tailscale', methods=['POST'])
+def connect_tailscale():
     try:
-        # Spawn the Tailscale process using pexpect
-        child = pexpect.spawn('tailscale up')
+        # Get the pre-auth key from the client's request
+        data = request.json
+        pre_auth_key = data.get('authkey')
 
-        # Read the output in real-time
-        auth_url = None
-        while True:
-            line = child.readline().decode('utf-8')  # Read one line of output at a time
-            if line:
-                print(f"Output: {line.strip()}")  # Print for debugging
-                # Search for the URL in the output
-                match = re.search(r'https?://[^\s]+', line)
-                if match:
-                    auth_url = match.group(0)
-                    break  # Stop reading once the URL is found
-            else:
-                break
+        if not pre_auth_key:
+            return jsonify({"error": "No auth key provided"}), 400
 
-        # Return the URL to the client if found
-        if auth_url:
-            return jsonify({"auth_url": auth_url}), 200
+        # Run the Tailscale up command with the provided pre-auth key
+        process = subprocess.run(['tailscale', 'up', '--authkey', pre_auth_key], capture_output=True, text=True)
+
+        # Check if the command was successful
+        if process.returncode == 0:
+            return jsonify({"message": "Tailscale connected successfully!"}), 200
         else:
-            return jsonify({"message": "No URL found."}), 500
+            return jsonify({"error": process.stderr}), 500
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
