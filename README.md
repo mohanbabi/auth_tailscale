@@ -10,7 +10,6 @@ for this you need to follow the below steps.
 
 > This use full in SBC( single board computer), I fuature i will add systemd file to run python script automation.
 
-add systemd file
-   
+
 
 
