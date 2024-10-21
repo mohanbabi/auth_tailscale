@@ -1,5 +1,5 @@
 # auth_tailscale
-Create a web interface to authentication in your's tailscale netwok 
+This a web interface to authentication in your's tailscale netwok 
 This app is build using flask to join your's tailscale network.
 for this you need to follow the below steps.
 
