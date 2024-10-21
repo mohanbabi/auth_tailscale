@@ -4,7 +4,7 @@ After=tailscae.service
 Wants=rpanion.service
 
 [Service]
-            python command  ---- directory --------------------run
+            
 ExecStart=/usr/bin/python3 /home/pi/how_do_drones_work/scripts/app.py
 Restart=on-failure
 RestartSec=13
